@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { BoardResponse, BoardListResponse, BoardCreateRequest, BoardUpdateRequest } from '../types/board';
+import type { BoardResponse, BoardListResponse, BoardCreateRequest, BoardCreateResponse, BoardUpdateRequest } from '../types/board';
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
@@ -45,7 +45,7 @@ export function getBoard(id: number) {
 }
 
 export function createBoard(data: BoardCreateRequest) {
-  return api.post<BoardResponse>('/boards', data);
+  return api.post<BoardCreateResponse>('/boards', data);
 }
 
 export function updateBoard(id: number, data: BoardUpdateRequest) {
