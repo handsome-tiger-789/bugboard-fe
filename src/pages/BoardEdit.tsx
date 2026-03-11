@@ -1,40 +1,38 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getPost, updatePost } from '../api/postApi';
-import styles from './PostEdit.module.css';
+import { getBoard, updateBoard } from '../api/boardApi';
+import styles from './BoardEdit.module.css';
 
-export default function PostEdit() {
+export default function BoardEdit() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!id) return;
-    getPost(Number(id))
+    getBoard(Number(id))
       .then((res) => {
         setTitle(res.data.title);
-        setAuthor(res.data.author);
         setContent(res.data.content);
       })
       .catch(() => alert('게시글을 불러오지 못했습니다.'))
       .finally(() => setLoading(false));
   }, [id]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!id) return;
-    if (!title.trim() || !author.trim() || !content.trim()) {
+    if (!title.trim() || !content.trim()) {
       alert('모든 필드를 입력해주세요.');
       return;
     }
     setSubmitting(true);
     try {
-      await updatePost(Number(id), { title, author, content });
-      navigate(`/posts/${id}`);
+      await updateBoard(Number(id), { title, content });
+      navigate(`/boards/${id}`);
     } catch {
       alert('게시글 수정에 실패했습니다.');
     } finally {
@@ -58,15 +56,6 @@ export default function PostEdit() {
           />
         </label>
         <label className={styles.label}>
-          작성자
-          <input
-            type="text"
-            className={styles.input}
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
-          />
-        </label>
-        <label className={styles.label}>
           내용
           <textarea
             className={styles.textarea}
@@ -79,7 +68,7 @@ export default function PostEdit() {
           <button type="submit" className={styles.submitButton} disabled={submitting}>
             {submitting ? '저장 중...' : '수정'}
           </button>
-          <Link to={`/posts/${id}`} className={styles.cancelButton}>
+          <Link to={`/boards/${id}`} className={styles.cancelButton}>
             취소
           </Link>
         </div>
