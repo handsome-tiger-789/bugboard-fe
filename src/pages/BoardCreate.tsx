@@ -1,25 +1,24 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { createPost } from '../api/postApi';
-import styles from './PostCreate.module.css';
+import { createBoard } from '../api/boardApi';
+import styles from './BoardCreate.module.css';
 
-export default function PostCreate() {
+export default function BoardCreate() {
   const navigate = useNavigate();
   const [title, setTitle] = useState('');
-  const [author, setAuthor] = useState('');
   const [content, setContent] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!title.trim() || !author.trim() || !content.trim()) {
+    if (!title.trim() || !content.trim()) {
       alert('모든 필드를 입력해주세요.');
       return;
     }
     setSubmitting(true);
     try {
-      const res = await createPost({ title, author, content });
-      navigate(`/posts/${res.data.id}`);
+      const res = await createBoard({ title, content });
+      navigate(`/boards/${res.data.id}`);
     } catch {
       alert('게시글 작성에 실패했습니다.');
     } finally {
@@ -38,15 +37,6 @@ export default function PostCreate() {
             className={styles.input}
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-          />
-        </label>
-        <label className={styles.label}>
-          작성자
-          <input
-            type="text"
-            className={styles.input}
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
           />
         </label>
         <label className={styles.label}>

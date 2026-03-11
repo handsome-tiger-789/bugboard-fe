@@ -68,6 +68,12 @@
   width: 110px;
 }
 
+.totalCount {
+  margin: 0 0 8px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
 .message {
   text-align: center;
   padding: 40px 0;
