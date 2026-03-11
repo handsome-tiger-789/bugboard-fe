@@ -22,7 +22,17 @@ export interface BoardCreateRequest {
   content: string;
 }
 
+export interface BoardCreateResponse {
+  boardId: number;
+}
+
 export interface BoardUpdateRequest {
   title: string;
   content: string;
+}
+
+export interface ErrorResponse {
+  status: number;
+  message: string;
+  timestamp: string;
 }
