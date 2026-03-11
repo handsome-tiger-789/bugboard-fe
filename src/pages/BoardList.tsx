@@ -11,33 +11,33 @@ const PAGE_SIZE = 10;
 export default function BoardList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = Number(searchParams.get('page') || '0');
-  const keyword = searchParams.get('keyword') || '';
+  const title = searchParams.get('title') || '';
 
   const [pageData, setPageData] = useState<BoardListResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setLoading(true);
-    getBoards(currentPage, PAGE_SIZE, keyword || undefined)
+    getBoards(currentPage, PAGE_SIZE, title || undefined)
       .then((res) => setPageData(res.data))
       .catch(() => alert('게시글 목록을 불러오지 못했습니다.'))
       .finally(() => setLoading(false));
-  }, [currentPage, keyword]);
+  }, [currentPage, title]);
 
   const handleSearch = (kw: string) => {
-    setSearchParams(kw ? { keyword: kw, page: '0' } : { page: '0' });
+    setSearchParams(kw ? { title: kw, page: '0' } : { page: '0' });
   };
 
   const handlePageChange = (page: number) => {
     const params: Record<string, string> = { page: String(page) };
-    if (keyword) params.keyword = keyword;
+    if (title) params.title = title;
     setSearchParams(params);
   };
 
   return (
     <div>
       <div className={styles.toolbar}>
-        <SearchBar onSearch={handleSearch} initialKeyword={keyword} />
+        <SearchBar onSearch={handleSearch} initialKeyword={title} />
         <Link to="/boards/new" className={styles.writeButton}>
           글쓰기
         </Link>
@@ -49,6 +49,7 @@ export default function BoardList() {
         <p className={styles.message}>게시글이 없습니다.</p>
       ) : (
         <>
+          <p className={styles.totalCount}>전체 {pageData.totalCount}건</p>
           <table className={styles.table}>
             <thead>
               <tr>

@@ -34,9 +34,9 @@ api.interceptors.response.use(
   },
 );
 
-export function getBoards(page: number, size: number, keyword?: string) {
+export function getBoards(page: number, size: number, title?: string) {
   return api.get<BoardListResponse>('/boards', {
-    params: { page, size, keyword },
+    params: { page, size, title },
   });
 }
 
