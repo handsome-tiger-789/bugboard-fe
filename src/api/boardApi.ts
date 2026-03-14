@@ -1,10 +1,12 @@
 import axios from 'axios';
-import type { BoardResponse, BoardListResponse, BoardCreateRequest, BoardCreateResponse, BoardUpdateRequest } from '../types/board';
+import type { BoardResponse, BoardListResponse, BoardCreateRequest, BoardCreateResponse, BoardUpdateRequest, CommentResponse, CommentCreateRequest, CommentUpdateRequest } from '../types/board';
+
+export const CURRENT_USER_ID = 1;
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
-    'X-User-Id': '1',
+    'X-User-Id': String(CURRENT_USER_ID),
     'X-User-Name': 'testuser',
     'X-User-Email': 'testuser@example.com',
   },
@@ -54,4 +56,20 @@ export function updateBoard(id: number, data: BoardUpdateRequest) {
 
 export function deleteBoard(id: number) {
   return api.delete<void>(`/boards/${id}`);
+}
+
+export function getComments(boardId: number) {
+  return api.get<CommentResponse[]>(`/boards/${boardId}/comments`);
+}
+
+export function createComment(boardId: number, data: CommentCreateRequest) {
+  return api.post<CommentResponse>(`/boards/${boardId}/comments`, data);
+}
+
+export function updateComment(boardId: number, commentId: number, data: CommentUpdateRequest) {
+  return api.put<CommentResponse>(`/boards/${boardId}/comments/${commentId}`, data);
+}
+
+export function deleteComment(boardId: number, commentId: number) {
+  return api.delete<void>(`/boards/${boardId}/comments/${commentId}`);
 }

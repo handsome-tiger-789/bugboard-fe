@@ -31,6 +31,25 @@ export interface BoardUpdateRequest {
   content: string;
 }
 
+export interface CommentResponse {
+  id: number;
+  boardId: number;
+  usersId: number;
+  nickname: string;
+  content: string;
+  likeCount: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CommentCreateRequest {
+  content: string;
+}
+
+export interface CommentUpdateRequest {
+  content: string;
+}
+
 export interface ErrorResponse {
   status: number;
   message: string;
