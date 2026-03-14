@@ -66,10 +66,10 @@ export function createComment(boardId: number, data: CommentCreateRequest) {
   return api.post<CommentResponse>(`/boards/${boardId}/comments`, data);
 }
 
-export function updateComment(boardId: number, commentId: number, data: CommentUpdateRequest) {
-  return api.put<CommentResponse>(`/boards/${boardId}/comments/${commentId}`, data);
+export function updateComment(commentId: number, data: CommentUpdateRequest) {
+  return api.put<CommentResponse>(`/comments/${commentId}`, data);
 }
 
-export function deleteComment(boardId: number, commentId: number) {
-  return api.delete<void>(`/boards/${boardId}/comments/${commentId}`);
+export function deleteComment(commentId: number) {
+  return api.delete<void>(`/comments/${commentId}`);
 }

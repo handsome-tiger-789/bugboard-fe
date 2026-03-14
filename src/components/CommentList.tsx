@@ -18,11 +18,15 @@ export default function CommentList({ boardId, authorId }: Props) {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editContent, setEditContent] = useState('');
 
-  useEffect(() => {
+  const fetchComments = () => {
     getComments(boardId)
       .then((res) => setComments(res.data))
       .catch(() => alert('댓글을 불러오지 못했습니다.'))
       .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchComments();
   }, [boardId]);
 
   const handleCreate = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -30,9 +34,9 @@ export default function CommentList({ boardId, authorId }: Props) {
     setError('');
     setSubmitting(true);
     try {
-      const res = await createComment(boardId, { content: newContent });
-      setComments((prev) => [...prev, res.data]);
+      await createComment(boardId, { content: newContent });
       setNewContent('');
+      fetchComments();
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError((err.response.data as ErrorResponse).message);
@@ -47,8 +51,8 @@ export default function CommentList({ boardId, authorId }: Props) {
   const handleDelete = async (commentId: number) => {
     if (!window.confirm('댓글을 삭제하시겠습니까?')) return;
     try {
-      await deleteComment(boardId, commentId);
-      setComments((prev) => prev.filter((c) => c.id !== commentId));
+      await deleteComment(commentId);
+      fetchComments();
     } catch {
       alert('댓글 삭제에 실패했습니다.');
     }
@@ -67,10 +71,10 @@ export default function CommentList({ boardId, authorId }: Props) {
   const handleEditSubmit = async (commentId: number) => {
     if (!editContent.trim()) return;
     try {
-      const res = await updateComment(boardId, commentId, { content: editContent });
-      setComments((prev) => prev.map((c) => (c.id === commentId ? res.data : c)));
+      await updateComment(commentId, { content: editContent });
       setEditingId(null);
       setEditContent('');
+      fetchComments();
     } catch {
       alert('댓글 수정에 실패했습니다.');
     }
@@ -111,6 +115,7 @@ export default function CommentList({ boardId, authorId }: Props) {
                   )}
                 </div>
               </div>
+              <div className={styles.likeCount}>좋아요 {comment.likeCount}</div>
               {editingId === comment.id ? (
                 <div className={styles.editForm}>
                   <textarea

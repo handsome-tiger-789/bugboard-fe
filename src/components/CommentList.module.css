@@ -74,6 +74,12 @@
   color: #333;
 }
 
+.likeCount {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
 .content {
   margin: 0;
   font-size: 0.93rem;
