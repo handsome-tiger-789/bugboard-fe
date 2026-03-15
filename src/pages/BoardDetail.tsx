@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getBoard, deleteBoard } from '../api/boardApi';
+import { getBoard, deleteBoard, CURRENT_USER_ID } from '../api/boardApi';
 import type { BoardResponse } from '../types/board';
+import CommentList from '../components/CommentList';
 import styles from './BoardDetail.module.css';
 
 export default function BoardDetail() {
@@ -45,16 +46,21 @@ export default function BoardDetail() {
       </div>
       <div className={styles.content}>{board.content}</div>
       <div className={styles.actions}>
-        <Link to={`/boards/${board.id}/edit`} className={styles.editButton}>
-          수정
-        </Link>
-        <button onClick={handleDelete} className={styles.deleteButton}>
-          삭제
-        </button>
+        {board.usersId === CURRENT_USER_ID && (
+          <>
+            <Link to={`/boards/${board.id}/edit`} className={styles.editButton}>
+              수정
+            </Link>
+            <button onClick={handleDelete} className={styles.deleteButton}>
+              삭제
+            </button>
+          </>
+        )}
         <Link to="/" className={styles.backButton}>
           목록
         </Link>
       </div>
+      <CommentList boardId={board.id} authorId={board.usersId} />
     </article>
   );
 }
