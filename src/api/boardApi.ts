@@ -73,3 +73,7 @@ export function updateComment(commentId: number, data: CommentUpdateRequest) {
 export function deleteComment(commentId: number) {
   return api.delete<void>(`/comments/${commentId}`);
 }
+
+export function toggleCommentLike(commentId: number) {
+  return api.post<void>(`/comments/${commentId}/like`);
+}

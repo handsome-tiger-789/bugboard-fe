@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { getComments, createComment, updateComment, deleteComment, CURRENT_USER_ID } from '../api/boardApi';
+import { getComments, createComment, updateComment, deleteComment, toggleCommentLike, CURRENT_USER_ID } from '../api/boardApi';
 import type { CommentResponse, ErrorResponse } from '../types/board';
 import styles from './CommentList.module.css';
 
@@ -80,6 +80,15 @@ export default function CommentList({ boardId, authorId }: Props) {
     }
   };
 
+  const handleLike = async (commentId: number) => {
+    try {
+      await toggleCommentLike(commentId);
+      fetchComments();
+    } catch {
+      alert('좋아요 처리에 실패했습니다.');
+    }
+  };
+
   if (loading) return <p className={styles.message}>댓글 로딩 중...</p>;
 
   return (
@@ -115,7 +124,12 @@ export default function CommentList({ boardId, authorId }: Props) {
                   )}
                 </div>
               </div>
-              <div className={styles.likeCount}>좋아요 {comment.likeCount}</div>
+              <button
+                className={`${styles.likeButton} ${comment.liked ? styles.liked : ''}`}
+                onClick={() => handleLike(comment.id)}
+              >
+                {comment.liked ? '♥' : '♡'} 좋아요 {comment.likeCount}
+              </button>
               {editingId === comment.id ? (
                 <div className={styles.editForm}>
                   <textarea

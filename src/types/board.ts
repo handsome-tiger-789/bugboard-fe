@@ -38,6 +38,7 @@ export interface CommentResponse {
   nickname: string;
   content: string;
   likeCount: number;
+  liked: boolean;
   createdAt: string;
   updatedAt: string;
 }
